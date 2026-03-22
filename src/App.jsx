@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import mapboxgl from 'mapbox-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
+import maplibregl from 'maplibre-gl'
+import 'maplibre-gl/dist/maplibre-gl.css'
 import MapImageOverlay from './components/MapImageOverlay'
 import './App.css'
-
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN || 'YOUR_MAPBOX_ACCESS_TOKEN'
 
 function App() {
   const mapContainerRef = useRef(null)
@@ -13,25 +11,37 @@ function App() {
   useEffect(() => {
     if (!mapContainerRef.current) return
 
-    const mapInstance = new mapboxgl.Map({
+    const mapInstance = new maplibregl.Map({
       container: mapContainerRef.current,
       style: {
         version: 8,
         sources: {
-          osm: {
+          tianditu: {
             type: 'raster',
-            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+            tiles: ['https://t0.tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=c193cc10a93c8b9812eee27133dbc792'],
             tileSize: 256,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            attribution: '&copy; <a href="https://www.tianditu.gov.cn/">天地图</a>',
+          },
+          tiandituLabel: {
+            type: 'raster',
+            tiles: ['https://t0.tianditu.gov.cn/cva_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=c193cc10a93c8b9812eee27133dbc792'],
+            tileSize: 256,
           },
         },
         layers: [
           {
-            id: 'osm-tiles',
+            id: 'tianditu-tiles',
             type: 'raster',
-            source: 'osm',
+            source: 'tianditu',
             minzoom: 0,
-            maxzoom: 19,
+            maxzoom: 18,
+          },
+          {
+            id: 'tianditu-label',
+            type: 'raster',
+            source: 'tiandituLabel',
+            minzoom: 0,
+            maxzoom: 18,
           },
         ],
       },

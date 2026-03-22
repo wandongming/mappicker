@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import mapboxgl from 'mapbox-gl'
+import maplibregl from 'maplibre-gl'
 
 const SOURCE_ID = 'overlay-image'
 const LAYER_ID = 'overlay-raster'
@@ -81,7 +81,7 @@ function MapImageOverlay({ map }) {
         const el = document.createElement('div')
         el.className = 'corner-marker'
 
-        const marker = new mapboxgl.Marker({ element: el, draggable: true })
+        const marker = new maplibregl.Marker({ element: el, draggable: true })
           .setLngLat(coords[idx])
           .addTo(map)
 
@@ -111,7 +111,7 @@ function MapImageOverlay({ map }) {
       el.className = 'pin-marker'
       el.title = pin.name
 
-      const marker = new mapboxgl.Marker({ element: el })
+      const marker = new maplibregl.Marker({ element: el })
         .setLngLat([lng, lat])
         .addTo(map)
 
@@ -120,7 +120,7 @@ function MapImageOverlay({ map }) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-      const popup = new mapboxgl.Popup({ offset: 15, closeButton: false })
+      const popup = new maplibregl.Popup({ offset: 15, closeButton: false })
         .setHTML(`<div class="pin-popup"><strong>${escapedName}</strong></div>`)
       marker.setPopup(popup)
 
