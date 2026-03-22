@@ -7,6 +7,8 @@ import './App.css'
 function App() {
   const mapContainerRef = useRef(null)
   const [map, setMap] = useState(null)
+  const [lng, setLng] = useState('116.4074')
+  const [lat, setLat] = useState('39.9042')
 
   useEffect(() => {
     if (!mapContainerRef.current) return
@@ -57,11 +59,43 @@ function App() {
     }
   }, [])
 
+  const handleJump = () => {
+    if (!map) return
+    const longitude = parseFloat(lng)
+    const latitude = parseFloat(lat)
+    if (isNaN(longitude) || isNaN(latitude)) {
+      alert('请输入有效的经纬度')
+      return
+    }
+    map.flyTo({
+      center: [longitude, latitude],
+      zoom: 14,
+      essential: true
+    })
+  }
+
   return (
     <div className="app">
       <div ref={mapContainerRef} className="map-container" />
       <div className="controls">
         <h3>本地图片叠加</h3>
+        <div className="jump-controls">
+          <input
+            type="text"
+            placeholder="经度"
+            value={lng}
+            onChange={(e) => setLng(e.target.value)}
+            className="coord-input"
+          />
+          <input
+            type="text"
+            placeholder="纬度"
+            value={lat}
+            onChange={(e) => setLat(e.target.value)}
+            className="coord-input"
+          />
+          <button onClick={handleJump} className="jump-btn">跳转</button>
+        </div>
         <MapImageOverlay map={map} />
         <p className="hint">支持 PNG、JPG、WebP。拖拽四角可拉伸，拖拽中心可移动。</p>
       </div>
